@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-10-2 19:20:37 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="po.Info" table="info">
+		<id name="id" type="int">
+			<column name="id" />
+			<generator class="identity" />
+		</id>
+		<property name="stationId" type="java.lang.String">
+			<column name="stationId" />
+		</property>
+		<property name="stationName" type="java.lang.String">
+			<column name="stationName" />
+		</property>
+		<property name="date" type="java.lang.String">
+			<column name="date" />
+		</property>
+		<property name="dateCST" type="java.lang.String">
+			<column name="dateCST" />
+		</property>
+		<property name="temperature" type="java.lang.String">
+			<column name="temperature" />
+		</property>
+		<property name="dewPoint" type="java.lang.String">
+			<column name="dewPoint" />
+		</property>
+		<property name="pressure" type="java.lang.String">
+			<column name="pressure" />
+		</property>
+		<property name="visibility" type="java.lang.String">
+		<column name="visibility" />
+		</property>
+		<property name="windDirection" type="java.lang.String">
+		<column name="windDirection" />
+		</property>
+		<property name="windSpeed" type="java.lang.String">
+		<column name="windSpeed" />
+		</property>
+		<property name="conditions" type="java.lang.String">
+		<column name="conditions" />
+		</property>
+		<property name="windDirDegrees" type="java.lang.String">
+		<column name="conditions" />
+		</property>
+		<property name="dateUTC" type="java.lang.String">
+			<column name="dateUTC" />
+		</property>
+	</class>
+</hibernate-mapping>

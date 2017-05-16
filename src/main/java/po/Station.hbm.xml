@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-10-2 19:20:37 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="po.Station" table="station">
+		<id name="id" type="int">
+			<column name="id" />
+			<generator class="identity" />
+		</id>
+		<property name="num" type="java.lang.String">
+			<column name="num" />
+		</property>
+		<property name="stationName" type="java.lang.String">
+			<column name="stationName" />
+		</property>
+		<property name="city" type="java.lang.String">
+			<column name="city" />
+		</property>
+		<property name="lat" type="java.lang.String">
+			<column name="lat" />
+		</property>
+		<property name="lon" type="java.lang.String">
+			<column name="lon" />
+		</property>
+		<property name="height" type="java.lang.String">
+			<column name="height" />
+		</property>
+	</class>
+</hibernate-mapping>
