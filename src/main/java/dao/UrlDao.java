@@ -34,7 +34,7 @@ public class UrlDao {
         try {
             Session session = HibernateUtil.currentSession();
             SQLQuery query = session
-                    .createSQLQuery("select * from url where flag = ? and id<=510000 and MOD(id,?) = ? limit 500");
+                    .createSQLQuery("select * from url where flag = ? and id<=400000 and MOD(id,?) = ? limit 500");
             return (List<Url>) query.addEntity(Url.class).setInteger(0, 0).setInteger(1, DownInfo.MAX_THREAD).setInteger(2, i).list();
         } finally {
             HibernateUtil.closeSession();

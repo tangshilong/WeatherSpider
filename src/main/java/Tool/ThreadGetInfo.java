@@ -30,66 +30,80 @@ public class ThreadGetInfo implements Runnable {
 
     @Override
     public void run() {
-        try {
-            List<Url> list = UrlDao.getUrlByNum(num);
-            for (Url url : list) {
-                System.out.println(url.getId());
-                HttpRequest requestInfo = getHttpRequest();
-                HttpResponse responseInfo;
+
+        while (true) try {
+            {
+                if (Thread.currentThread().isInterrupted()) {
+                    return;
+                }
                 try {
-                    responseInfo = HttpUtil.get(url.getUrl(), requestInfo);
-                    CatchHandler.parse(responseInfo.getContent(), new Resolver() {
-                        @Override
-                        public void success() {
-                            //生成date
-                            String[] splits = url.getUrl().split("/");
-                            String date = splits[6] + "/" + splits[7] + "/" + splits[8];
-                            //获取station
-                            String stationNum = splits[5];
-                            try {
-                                List<Station> stations = StationDao.getStationByNum(stationNum);
-                                Elements elements = $("body").getElements();
-                                for (Element element : elements) {
-                                    String html = element.html();
-                                    if(html==null||"".equals(html)){
-                                        continue;
-                                    }
-                                    String[] strings = html.split("<br>");
-                                    for (int i = 1; i < strings.length; i++) {
-                                        String[] infos = strings[i].split(",");
-                                        if (infos.length<14) {
-                                            break;
+                    List<Url> list = UrlDao.getUrlByNum(num);
+                    for (Url url : list) {
+                        System.out.println(url.getId());
+                        HttpRequest requestInfo = getHttpRequest();
+                        HttpResponse responseInfo;
+                        try {
+                            responseInfo = HttpUtil.get(url.getUrl(), requestInfo);
+                            CatchHandler.parse(responseInfo.getContent(), new Resolver() {
+                                @Override
+                                public void success() {
+                                    //生成date
+                                    String[] splits = url.getUrl().split("/");
+                                    String date = splits[6] + "/" + splits[7] + "/" + splits[8];
+                                    //获取station
+                                    String stationNum = splits[5];
+                                    try {
+                                        List<Station> stations = StationDao.getStationByNum(stationNum);
+                                        Elements elements = $("body").getElements();
+                                        for (Element element : elements) {
+                                            String html = element.html();
+                                            if (html == null || "".equals(html)) {
+                                                continue;
+                                            }
+                                            String[] strings = html.split("<br>");
+                                            for (int i = 1; i < strings.length; i++) {
+                                                String[] infos = strings[i].split(",");
+                                                if (infos.length < 14) {
+                                                    break;
+                                                }
+                                                Info info = new Info(stations.get(0).getNum(), stations.get(0).getStationName(), date, infos[0], infos[1], infos[3], infos[4], infos[5], infos[6], infos[7], infos[11], infos[12], infos[13]);
+                                                try {
+                                                    InfoDao.saveInfo(info);
+                                                } catch (Exception e) {
+                                                    System.out.println("信息存储出错");
+                                                    e.printStackTrace();
+                                                }
+                                                try {
+                                                    UrlDao.updateFlag(url.getId());
+                                                } catch (Exception e) {
+                                                    System.out.println("更新url状态出错");
+                                                    e.printStackTrace();
+                                                }
+                                            }
                                         }
-                                        Info info = new Info(stations.get(0).getNum(), stations.get(0).getStationName(), date, infos[0], infos[1], infos[3], infos[4], infos[5], infos[6], infos[7], infos[11], infos[12], infos[13]);
-                                        try {
-                                            InfoDao.saveInfo(info);
-                                        } catch (Exception e) {
-                                            System.out.println("信息存储出错");
-                                            e.printStackTrace();
-                                        }
-                                        try {
-                                            UrlDao.updateFlag(url.getId());
-                                        } catch (Exception e) {
-                                            System.out.println("更新url状态出错");
-                                            e.printStackTrace();
-                                        }
+                                    } catch (Exception e) {
+                                        System.out.println("获取stationNum出错");
+                                        e.printStackTrace();
                                     }
                                 }
-                            } catch (Exception e) {
-                                System.out.println("获取stationNum出错");
-                                e.printStackTrace();
-                            }
-                        }
 
-                    });
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 } catch (Exception e) {
+                    System.out.println("获取url列表失败");
                     e.printStackTrace();
                 }
+                Thread.sleep(100);
             }
-        } catch (Exception e) {
-            System.out.println("获取url列表失败");
+        } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();//中断线程
         }
+
+
     }
 
     public static HttpRequest getHttpRequest() {
@@ -109,7 +123,7 @@ public class ThreadGetInfo implements Runnable {
         //}
 //https://www.wunderground.com/history/station/52884/2007/1/1/DailyHistory.html?format=1
         List<Url> urlByNum = UrlDao.getUrlByNum(1);
-        for (Url url :urlByNum){
+        for (Url url : urlByNum) {
             System.out.println(url);
         }
     }
